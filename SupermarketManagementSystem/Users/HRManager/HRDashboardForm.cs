@@ -52,6 +52,14 @@
             form.ShowDialog(this);
         }
 
+        private void OpenWorkRecordManagement()
+        {
+            using WorkRecordManagementForm form =
+                new WorkRecordManagementForm();
+
+            form.ShowDialog(this);
+        }
+
         private Panel CreateSidebar()
         {
             Panel sidebar = new Panel
@@ -102,9 +110,7 @@
 
             Button btnWorkRecords = CreateMenuButton(
                 "Work Records",
-                () => ShowComingSoon(
-                    "Employee Work Records"
-                )
+                OpenWorkRecordManagement
             );
 
             Button btnLogout = CreateMenuButton(
