@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.2.0" />
+    <PackageReference Include="MySql.Data" Version="26.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="DatabaseScripts\" />
+    <Folder Include="Users\Admin\" />
+    <Folder Include="Users\HRManager\" />
+    <Folder Include="Users\FinanceManager\" />
+    <Folder Include="Users\Employee\" />
+    <Folder Include="Users\Customer\" />
+    <Folder Include="Users\Supplier\" />
+    <Folder Include="Users\SalesManager\" />
+    <Folder Include="Utilities\" />
+    <Folder Include="Security\" />
+    <Folder Include="Services\" />
+    <Folder Include="Repositories\" />
+  </ItemGroup>
+
+</Project>
