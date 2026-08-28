@@ -1,4 +1,6 @@
 using SupermarketManagementSystem.Users.Admin;
+using SupermarketManagementSystem.Users.HRManager;
+
 namespace SupermarketManagementSystem
 {
     public partial class LoginForm : Form
@@ -13,9 +15,6 @@ namespace SupermarketManagementSystem
         {
             InitializeComponent();
             CreateLoginInterface();
-
-            // Temporary: run once to generate the Admin password hash.
-            GenerateAdminPasswordHash();
         }
 
         private void CreateLoginInterface()
@@ -190,26 +189,6 @@ namespace SupermarketManagementSystem
             ActiveControl = txtUsername;
         }
 
-        private void GenerateAdminPasswordHash()
-        {
-            const string temporaryPassword = "Admin@123";
-
-            string passwordHash =
-                BCrypt.Net.BCrypt.HashPassword(
-                    temporaryPassword
-                );
-
-            Clipboard.SetText(passwordHash);
-
-            MessageBox.Show(
-                "Admin password hash copied to clipboard.\n\n" +
-                "Temporary password: Admin@123",
-                "Password Hash Generated",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information
-            );
-        }
-
         private void ChkShowPassword_CheckedChanged(
             object? sender,
             EventArgs e)
@@ -251,15 +230,38 @@ namespace SupermarketManagementSystem
                 return;
             }
 
+            Form dashboard;
+
+            if (username.Equals(
+                "hrmanager",
+                StringComparison.OrdinalIgnoreCase))
+            {
+                dashboard = new HRDashboardForm();
+            }
+            else
+            {
+                dashboard = new AdminDashboardForm();
+            }
+
+            // Hide the Login form.
             Hide();
+            ShowInTaskbar = false;
 
-            using AdminDashboardForm dashboard =
-                new AdminDashboardForm();
+            // Open the selected dashboard.
+            using (dashboard)
+            {
+                dashboard.ShowDialog();
+            }
 
-            dashboard.ShowDialog();
-
+            // Return to Login after dashboard logout.
+            txtUsername.Clear();
             txtPassword.Clear();
+            chkShowPassword.Checked = false;
+
+            ShowInTaskbar = true;
             Show();
+            Activate();
+            BringToFront();
             txtUsername.Focus();
         }
 
