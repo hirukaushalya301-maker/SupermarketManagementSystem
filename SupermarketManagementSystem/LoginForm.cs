@@ -1,22 +1,25 @@
+using SupermarketManagementSystem.Users.Admin;
 namespace SupermarketManagementSystem
 {
     public partial class LoginForm : Form
     {
-        private TextBox txtUsername;
-        private TextBox txtPassword;
-        private CheckBox chkShowPassword;
-        private Button btnLogin;
-        private Button btnExit;
+        private TextBox txtUsername = null!;
+        private TextBox txtPassword = null!;
+        private CheckBox chkShowPassword = null!;
+        private Button btnLogin = null!;
+        private Button btnExit = null!;
 
         public LoginForm()
         {
             InitializeComponent();
             CreateLoginInterface();
+
+            // Temporary: run once to generate the Admin password hash.
+            GenerateAdminPasswordHash();
         }
 
         private void CreateLoginInterface()
         {
-            // Form settings
             Text = "Supermarket Management System - Login";
             StartPosition = FormStartPosition.CenterScreen;
             ClientSize = new Size(900, 550);
@@ -24,7 +27,6 @@ namespace SupermarketManagementSystem
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
 
-            // Left-side coloured panel
             Panel leftPanel = new Panel
             {
                 Location = new Point(0, 0),
@@ -37,7 +39,11 @@ namespace SupermarketManagementSystem
                 Text = "SUPERMARKET MANAGEMENT\nSYSTEM",
                 Location = new Point(5, 145),
                 Size = new Size(370, 140),
-                Font = new Font("Segoe UI", 15, FontStyle.Bold),
+                Font = new Font(
+                    "Segoe UI",
+                    15,
+                    FontStyle.Bold
+                ),
                 ForeColor = Color.White,
                 TextAlign = ContentAlignment.MiddleCenter
             };
@@ -55,13 +61,16 @@ namespace SupermarketManagementSystem
             leftPanel.Controls.Add(lblSystemName);
             leftPanel.Controls.Add(lblDescription);
 
-            // Login heading
             Label lblTitle = new Label
             {
                 Text = "Welcome Back",
                 Location = new Point(500, 80),
                 AutoSize = true,
-                Font = new Font("Segoe UI", 24, FontStyle.Bold),
+                Font = new Font(
+                    "Segoe UI",
+                    24,
+                    FontStyle.Bold
+                ),
                 ForeColor = Color.FromArgb(24, 90, 60)
             };
 
@@ -74,16 +83,18 @@ namespace SupermarketManagementSystem
                 ForeColor = Color.DimGray
             };
 
-            // Username label
             Label lblUsername = new Label
             {
                 Text = "Username",
                 Location = new Point(505, 190),
                 AutoSize = true,
-                Font = new Font("Segoe UI", 10, FontStyle.Bold)
+                Font = new Font(
+                    "Segoe UI",
+                    10,
+                    FontStyle.Bold
+                )
             };
 
-            // Username textbox
             txtUsername = new TextBox
             {
                 Name = "txtUsername",
@@ -93,16 +104,18 @@ namespace SupermarketManagementSystem
                 MaxLength = 50
             };
 
-            // Password label
             Label lblPassword = new Label
             {
                 Text = "Password",
                 Location = new Point(505, 275),
                 AutoSize = true,
-                Font = new Font("Segoe UI", 10, FontStyle.Bold)
+                Font = new Font(
+                    "Segoe UI",
+                    10,
+                    FontStyle.Bold
+                )
             };
 
-            // Password textbox
             txtPassword = new TextBox
             {
                 Name = "txtPassword",
@@ -113,7 +126,6 @@ namespace SupermarketManagementSystem
                 UseSystemPasswordChar = true
             };
 
-            // Show-password checkbox
             chkShowPassword = new CheckBox
             {
                 Text = "Show password",
@@ -125,7 +137,6 @@ namespace SupermarketManagementSystem
             chkShowPassword.CheckedChanged +=
                 ChkShowPassword_CheckedChanged;
 
-            // Login button
             btnLogin = new Button
             {
                 Text = "LOGIN",
@@ -134,14 +145,17 @@ namespace SupermarketManagementSystem
                 BackColor = Color.FromArgb(24, 90, 60),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
-                Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                Font = new Font(
+                    "Segoe UI",
+                    10,
+                    FontStyle.Bold
+                ),
                 Cursor = Cursors.Hand
             };
 
             btnLogin.FlatAppearance.BorderSize = 0;
             btnLogin.Click += BtnLogin_Click;
 
-            // Exit button
             btnExit = new Button
             {
                 Text = "EXIT",
@@ -150,13 +164,16 @@ namespace SupermarketManagementSystem
                 BackColor = Color.Gainsboro,
                 ForeColor = Color.DarkRed,
                 FlatStyle = FlatStyle.Flat,
-                Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                Font = new Font(
+                    "Segoe UI",
+                    10,
+                    FontStyle.Bold
+                ),
                 Cursor = Cursors.Hand
             };
 
             btnExit.Click += BtnExit_Click;
 
-            // Add all controls to the form
             Controls.Add(leftPanel);
             Controls.Add(lblTitle);
             Controls.Add(lblSubtitle);
@@ -168,12 +185,29 @@ namespace SupermarketManagementSystem
             Controls.Add(btnLogin);
             Controls.Add(btnExit);
 
-            // Keyboard shortcuts
             AcceptButton = btnLogin;
             CancelButton = btnExit;
-
-            // Start typing in the username field
             ActiveControl = txtUsername;
+        }
+
+        private void GenerateAdminPasswordHash()
+        {
+            const string temporaryPassword = "Admin@123";
+
+            string passwordHash =
+                BCrypt.Net.BCrypt.HashPassword(
+                    temporaryPassword
+                );
+
+            Clipboard.SetText(passwordHash);
+
+            MessageBox.Show(
+                "Admin password hash copied to clipboard.\n\n" +
+                "Temporary password: Admin@123",
+                "Password Hash Generated",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information
+            );
         }
 
         private void ChkShowPassword_CheckedChanged(
@@ -217,13 +251,16 @@ namespace SupermarketManagementSystem
                 return;
             }
 
-            // Database login will be added in the next step.
-            MessageBox.Show(
-                "Login form validation is working.",
-                "Success",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information
-            );
+            Hide();
+
+            using AdminDashboardForm dashboard =
+                new AdminDashboardForm();
+
+            dashboard.ShowDialog();
+
+            txtPassword.Clear();
+            Show();
+            txtUsername.Focus();
         }
 
         private void BtnExit_Click(

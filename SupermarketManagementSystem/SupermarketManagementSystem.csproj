@@ -14,9 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
     <Folder Include="DatabaseScripts\" />
-    <Folder Include="Users\Admin\" />
     <Folder Include="Users\HRManager\" />
     <Folder Include="Users\FinanceManager\" />
     <Folder Include="Users\Employee\" />
@@ -25,8 +23,6 @@
     <Folder Include="Users\SalesManager\" />
     <Folder Include="Utilities\" />
     <Folder Include="Security\" />
-    <Folder Include="Services\" />
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
 </Project>
