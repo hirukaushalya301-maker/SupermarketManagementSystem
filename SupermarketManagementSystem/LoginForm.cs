@@ -1,3 +1,4 @@
+using SupermarketManagementSystem.Users.InventoryManager;
 using SupermarketManagementSystem.Users.Admin;
 using SupermarketManagementSystem.Users.HRManager;
 
@@ -237,6 +238,12 @@ namespace SupermarketManagementSystem
                 StringComparison.OrdinalIgnoreCase))
             {
                 dashboard = new HRDashboardForm();
+            }
+            else if (username.Equals(
+                "inventorymanager",
+                StringComparison.OrdinalIgnoreCase))
+            {
+                dashboard = new InventoryDashboardForm();
             }
             else
             {
